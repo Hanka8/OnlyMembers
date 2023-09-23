@@ -8,9 +8,13 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'OnlyMembers', login: false });
-});
+router.get("/", asyncHandler(async (req, res, next) => {
+  const allMessages = await MessageSchema.find({})
+    .populate('author')
+    .exec();
+
+  res.render('index', { title: 'OnlyMembers', login: false, messages: allMessages });
+}));
 
 router.post('/', asyncHandler(async (req, res, next) => {
   try {
@@ -22,7 +26,8 @@ router.post('/', asyncHandler(async (req, res, next) => {
         isAdmin: false
       });
       await newMember.save();
-      res.render('index', { title: 'OnlyMembers', login: true });
+      const allMessages = await MessageSchema.find({}).populate('author').exec();
+      res.render('index', { title: 'OnlyMembers', login: true, messages: allMessages });
     } else {
       console.log("login")
       passport.authenticate("local", {
@@ -36,24 +41,31 @@ router.post('/', asyncHandler(async (req, res, next) => {
   }
 }));
 
-router.get('/login-success', function(req, res, next) {
-  res.render('index', { title: 'OnlyMembers', login: true });
-});
+router.get("/login-success", asyncHandler(async (req, res, next) => {
+  const allMessages = await MessageSchema.find({})
+    .populate('author')
+    .exec();
+  res.render('index', { title: 'OnlyMembers', login: true, messages: allMessages });
+}));
 
-router.get('/login-failure', function(req, res, next) {
-  res.render('index', { title: 'OnlyMembers', login: false });
-});
+router.get("/login-failure", asyncHandler(async (req, res, next) => {
+  const allMessages = await MessageSchema.find({})
+    .populate('author')
+    .exec();
+  res.render('index', { title: 'OnlyMembers', login: false, messages: allMessages });
+}));
 
 router.post('/login-success', asyncHandler(async (req, res, next) => {
   try {
       const newMessage = new MessageSchema({
-        name: req.body.title,
-        email: req.body.message,
-        author: "author",
+        title: req.body.title,
+        message: req.body.message,
+        author: req.user._id,
         timestamp: Date.now()
       });
       await newMessage.save();
-      res.render('index', { title: 'OnlyMembers', login: true });
+      const allMessages = await MessageSchema.find({}).populate('author').exec();
+      res.render('index', { title: 'OnlyMembers', login: true, messages: allMessages });
     }  catch(err) {
     return next(err);
   }}
@@ -70,9 +82,9 @@ router.post('/login-failure', asyncHandler(async (req, res, next) => {
         isAdmin: false
       });
       await newMember.save();
-      res.render('index', { title: 'OnlyMembers', login: true });
+      const allMessages = await MessageSchema.find({}).populate('author').exec();
+      res.render('index', { title: 'OnlyMembers', login: true, messages: allMessages });
     } else {
-      console.log("login")
       passport.authenticate("local", {
         successRedirect: "/login-success",
         failureRedirect: "/login-failure"

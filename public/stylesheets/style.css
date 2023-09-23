@@ -90,6 +90,8 @@ a {
 
 .message__info {
   color: #9e9e9e;
+  display: flex;
+  justify-content: space-between;
 }
 
 .signup__form {
@@ -151,6 +153,8 @@ a {
   margin-right: 4rem;
   margin-bottom: 4rem;
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
 }
 
@@ -161,6 +165,23 @@ a {
   gap: .51rem;
   font-size: 1.5rem;
   width: 50vw;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 200ms ease-out;
+}
+
+.show-message-form {
+  max-height: fit-content;
+  transition: max-height 200ms ease-out;
+}
+
+.message__btn {
+  border-radius: 15px;
+  background-color: transparent;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1.5rem;
+  cursor: pointer;
 }
 
 .form__title, .form__text, .form__submit {
