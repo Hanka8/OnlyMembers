@@ -30,7 +30,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-console.log("before the passport stuff");
 passport.use(
   new LocalStrategy(async (username, password, done) => {
     try {
@@ -47,7 +46,6 @@ passport.use(
     };
   })
 );
-console.log("after the passport stuff");
 
 passport.serializeUser((user, done) => {
   done(null, user.id);

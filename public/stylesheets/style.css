@@ -182,6 +182,7 @@ a {
   padding: 10px 20px;
   font-size: 1.5rem;
   cursor: pointer;
+  margin-bottom: 1rem;
 }
 
 .form__title, .form__text, .form__submit {
@@ -213,6 +214,10 @@ a {
 .form__submit:hover {
   background-color: white;
   color: #000;
+}
+
+.error {
+  color:rgb(255, 87, 87);
 }
 
 /* MEDIA QUERIES */
