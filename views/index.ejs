@@ -25,7 +25,8 @@
 
     <% if (login) { %>
     <aside class="message__aside">
-      <form action="" method="post" class="message__form">
+    <button class="message__btn show-message-btn" id="messageBtn">Create new message</button>
+      <form action="" method="post" class="message__form" id="messageForm">
         <input class="form__title" type="text" name="title" id="title" placeholder="title" required>
         <textarea class="form__text" name="message" id="message" cols="30" rows="10" placeholder="message" required></textarea>
         <input class="form__submit" type="submit" value="send" class="btn-pink">
@@ -35,26 +36,79 @@
 
 
     <main class="messages__container">
-
-      <div class="message__container message-left">
-        <h2 class="message__title">nadpis</h2>
-        <p class="message__text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit, reiciendis. Nisi illum cum eveniet vero! Quia repudiandae architecto iste non iusto magnam omnis laborum suscipit a maxime officia, voluptas doloremque!</p>
-        <div class="message__info">you have to be in the club to see author and date</div>
-      </div>
-
-      <div class="message__container message-right">
-        <h2 class="message__title">nadpis</h2>
-        <p class="message__text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit, reiciendis. Nisi illum cum
-          eveniet vero! Quia repudiandae architecto iste non iusto magnam omnis laborum suscipit a maxime officia, voluptas
-          doloremque!</p>
-        <div class="message__info">you have to be in the club to see author and date</div>
-      </div>
+      <% if (login) { %>
+      <% for (let i = 0; i < messages.length; i++) { %>
+        <% if (i % 2 == 0) { %>
+          <div class="message__container message-left">
+            <h2 class="message__title">
+              <%= messages[i].title %>
+            </h2>
+            <p class="message__text">
+              <%= messages[i].message %>
+            </p>
+            <div class="message__info">
+              <p class="info__text"><%= messages[i].author.name %></p>
+              <p class="info__text"><%= messages[i].due_back_formatted %></p>
+            </div>
+          </div>
+        <% } else { %>
+          <div class="message__container message-right">
+            <h2 class="message__title">
+              <%= messages[i].title %>
+            </h2>
+            <p class="message__text">
+              <%= messages[i].message %>
+            </p>
+            <div class="message__info">
+              <p class="info__text"><%= messages[i].author.name %></p>
+              <p class="info__text"><%= messages[i].due_back_formatted %></p>
+            </div>
+          </div>
+        <% } %>
+      <% } %>
+      <% } else { %>
+        <% for (let i=0; i < messages.length; i++) { %>
+          <% if (i % 2==0) { %>
+            <div class="message__container message-left">
+              <h2 class="message__title">
+                <%= messages[i].title %>
+              </h2>
+              <p class="message__text">
+                <%= messages[i].message %>
+              </p>
+              <div class="message__info">
+                You have to be logged in to see the author and date.
+              </div>
+            </div>
+            <% } else { %>
+              <div class="message__container message-right">
+                <h2 class="message__title">
+                  <%= messages[i].title %>
+                </h2>
+                <p class="message__text">
+                  <%= messages[i].message %>
+                </p>
+                <div class="message__info">
+                  You have to be logged in to see the author and date.
+                </div>
+              </div>
+              <% } %>
+                <% } %>
+      <% } %>
 
     </main>
 
     <% if (!login) { %>
-    <aside class="modal" id="modalSignup">
-      <form action="" method="post" class="signup__form" id="signUpForm" required>
+      <% if (errors.length > 0) { %>
+      <aside class="modal modal-show" id="modalSignup">
+        <form action="" method="post" class="signup__form show" id="signUpForm" required>
+          <% for (let i = 0; i < errors.length; i++) { %>
+            <p class="error"><%= errors[i].msg %></p>
+          <% } %>
+      <% } else { %>
+      <aside class="modal" id="modalSignup">
+        <form action="" method="post" class="signup__form" id="signUpForm" required>
+      <% } %>
         <input type="text" name="name" id="name" placeholder="name" required>
         <input type="email" name="email" id="email" placeholder="email" required>
         <input type="password" name="password" id="password" placeholder="password" required>
@@ -75,7 +129,7 @@
   </body>
 
   <script>
-
+    <% if (!login) { %>
     const signUpButton = document.getElementById('signUp');
     const signUpForm = document.getElementById('signUpForm');
     const signUpSubmit = document.getElementById('signUpSubmit');
@@ -96,16 +150,6 @@
       modalLogin.classList.toggle('modal-show');
     });
 
-    // signUpSubmit.addEventListener('click', () => {
-    //   signUpForm.classList.remove('show');
-    //   modalSignup.classList.remove('modal-show');
-    // });
-
-    // logInSubmit.addEventListener('click', () => {
-    //   logInForm.classList.remove('show');
-    //   modalLogin.classList.remove('modal-show');
-    // });
-
     window.addEventListener("click", (e) => {
         if (e.target.id == "modalLogin" || e.target.id == "modalSignup") {
           modalSignup.classList.remove("modal-show");
@@ -114,6 +158,15 @@
           logInForm.classList.remove('show');
         };
       });
+    <% } else { %>
+
+    const messageBtn = document.getElementById('messageBtn');
+    const messageForm = document.getElementById('messageForm');
+
+    messageBtn.addEventListener('click', () => {
+      messageForm.classList.toggle('show-message-form');
+    });
+    <% } %>
 
   </script>
 </html>
