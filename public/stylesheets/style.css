@@ -185,6 +185,11 @@ a {
   margin-bottom: 1rem;
 }
 
+.message__btn:hover {
+  background-color: #FF00FF;
+  color: #000;
+}
+
 .form__title, .form__text, .form__submit {
   width: 100%;
   padding: 10px;
