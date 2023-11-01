@@ -83,15 +83,17 @@ const handleIndexForms = asyncHandler(async (req, res, next) => {
           isAdmin: false
         });
         await newMember.save();
-    });
 
-    // const allMessages = await MessageSchema.find({})
-    //   .populate('author')
-    //   .sort({ timestamp: -1 })
-    //   .exec();
+        // --- login user
+        req.login(newMember, (err) => {
+        if (err) {
+          return next(err);
+        }
+        });
 
-    // res.render('index', { title: 'OnlyMembers', login: true, messages: allMessages, errors: [] });
-    res.redirect('/login-success');
+      });
+
+      res.redirect('/login-success');
 
   // handle login if the index request contains an email and password
   } else {
